@@ -1,0 +1,100 @@
+{
+  "name": "sistema-grafos",
+  "version": "1.0.0",
+  "description": "Sistema completo de visualización y resolución de grafos con algoritmos DFS, BFS, Kruskal y Prim",
+  "main": "index.html",
+  "keywords": [
+    "grafos",
+    "algoritmos",
+    "visualización",
+    "DFS",
+    "BFS", 
+    "Kruskal",
+    "Prim",
+    "MST",
+    "D3.js",
+    "JavaScript"
+  ],
+  "author": "Tu Nombre",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tu-usuario/sistema-grafos.git"
+  },
+  "dependencies": {
+    "d3": "^7.8.5",
+    "chart.js": "^3.9.1"
+  },
+  "scripts": {
+    "start": "python -m http.server 8080",
+    "dev": "python -m http.server 3000",
+    "build": "echo 'No build process needed for this static project'",
+    "deploy": "echo 'Deploy to your preferred hosting service'"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "features": {
+    "algorithms": [
+      "DFS - Búsqueda en Profundidad",
+      "BFS - Búsqueda en Amplitud", 
+      "Kruskal - Árbol de Expansión Mínima",
+      "Prim - Árbol de Expansión Mínima"
+    ],
+    "graphTypes": [
+      "Dirigidos y No Dirigidos",
+      "Ponderados y No Ponderados"
+    ],
+    "export": [
+      "JSON con metadatos completos",
+      "CSV (aristas, nodos, matriz adyacencia)",
+      "PNG de alta calidad",
+      "Reportes completos"
+    ],
+    "analysis": [
+      "Orden de recorrido de nodos",
+      "Verificación de conectividad",
+      "Distancias mínimas en saltos",
+      "Rutas específicas encontradas",
+      "Comparación de algoritmos MST",
+      "Estadísticas del grafo"
+    ],
+    "interface": [
+      "Visualización interactiva con D3.js",
+      "Edición en tiempo real",
+      "Historial completo con deshacer/rehacer",
+      "Animaciones de algoritmos",
+      "Responsive design",
+      "Atajos de teclado"
+    ]
+  },
+  "requirements": {
+    "browser": "Chrome 70+, Firefox 65+, Safari 12+, Edge 79+",
+    "javascript": "ES6+",
+    "libraries": {
+      "d3": "7.x para visualización",
+      "chart.js": "3.x para gráficos adicionales",
+      "font-awesome": "6.x para iconos",
+      "inter-font": "Google Fonts para tipografía"
+    }
+  },
+  "performance": {
+    "recommendedNodes": "Hasta 50 nodos para óptimo rendimiento",
+    "maxNodes": "100 nodos máximo recomendado", 
+    "animationDelay": "Configurable (100ms - 2000ms)",
+    "memoryUsage": "Optimizado para uso eficiente de memoria"
+  },
+  "accessibility": {
+    "keyboard": "Navegación completa por teclado",
+    "screenReader": "Labels y roles ARIA apropiados",
+    "colorBlind": "Patrones además de colores para diferenciación",
+    "responsive": "Funciona en dispositivos móviles y tabletas"
+  },
+  "testing": {
+    "manual": "Pruebas manuales extensivas en múltiples navegadores",
+    "algorithms": "Verificación de correctitud con casos conocidos",
+    "performance": "Pruebas de rendimiento con grafos grandes"
+  }
+}

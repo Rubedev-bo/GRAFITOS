@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Visualización y Resolución de Grafos</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-project-diagram"></i> Sistema de Grafos</h1>
+                <div class="header-controls">
+                    <button id="newGraphBtn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Nuevo Grafo
+                    </button>
+                    <button id="saveGraphBtn" class="btn btn-secondary">
+                        <i class="fas fa-save"></i> Guardar
+                    </button>
+                    <button id="loadGraphBtn" class="btn btn-secondary">
+                        <i class="fas fa-folder-open"></i> Cargar
+                    </button>
+                    <button id="historyBtn" class="btn btn-info">
+                        <i class="fas fa-history"></i> Historial
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-tools"></i> Herramientas</h3>
+                    <div class="tool-group">
+                        <button id="addNodeBtn" class="tool-btn active" data-tool="addNode">
+                            <i class="fas fa-circle"></i> Agregar Nodo
+                        </button>
+                        <button id="addEdgeBtn" class="tool-btn" data-tool="addEdge">
+                            <i class="fas fa-minus"></i> Agregar Arista
+                        </button>
+                        <button id="deleteBtn" class="tool-btn" data-tool="delete">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
+                        <button id="selectBtn" class="tool-btn" data-tool="select">
+                            <i class="fas fa-hand-pointer"></i> Seleccionar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-cog"></i> Configuración del Grafo</h3>
+                    <div class="config-group">
+                        <label>
+                            <input type="checkbox" id="isDirected"> Grafo Dirigido
+                        </label>
+                        <label>
+                            <input type="checkbox" id="isWeighted"> Grafo Ponderado
+                        </label>
+                        <label>
+                            <input type="checkbox" id="autoRecalculate" checked> 
+                            <i class="fas fa-sync-alt"></i> Recalculación Automática
+                        </label>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-search"></i> Algoritmos</h3>
+                    <div class="algorithm-group">
+                        <button id="dfsBtn" class="algorithm-btn">
+                            <i class="fas fa-route"></i> DFS
+                        </button>
+                        <button id="bfsBtn" class="algorithm-btn">
+                            <i class="fas fa-expand-arrows-alt"></i> BFS
+                        </button>
+                        <button id="kruskalBtn" class="algorithm-btn">
+                            <i class="fas fa-tree"></i> Kruskal
+                        </button>
+                        <button id="primBtn" class="algorithm-btn">
+                            <i class="fas fa-sitemap"></i> Prim
+                        </button>
+                    </div>
+                    
+                    <div class="algorithm-config">
+                        <div class="input-group">
+                            <label for="startNode">Nodo inicial:</label>
+                            <select id="startNode"></select>
+                        </div>
+                        <div class="input-group">
+                            <label for="endNode">Nodo final:</label>
+                            <select id="endNode"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-download"></i> Exportar</h3>
+                    <div class="export-group">
+                        <button id="exportJsonBtn" class="export-btn">
+                            <i class="fas fa-file-code"></i> JSON
+                        </button>
+                        <button id="exportCsvBtn" class="export-btn">
+                            <i class="fas fa-file-csv"></i> CSV
+                        </button>
+                        <button id="exportImageBtn" class="export-btn">
+                            <i class="fas fa-image"></i> Imagen
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Graph Canvas -->
+            <main class="graph-container">
+                <div class="canvas-header">
+                    <h2>Visualización del Grafo</h2>
+                    <div class="canvas-controls">
+                        <button id="zoomInBtn" class="canvas-btn">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                        <button id="zoomOutBtn" class="canvas-btn">
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                        <button id="resetZoomBtn" class="canvas-btn">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <button id="centerBtn" class="canvas-btn">
+                            <i class="fas fa-crosshairs"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="graphCanvas" class="graph-canvas"></div>
+                <div id="mstCanvas" class="mst-canvas hidden"></div>
+            </main>
+
+            <!-- Results Panel -->
+            <aside class="results-panel">
+                <div class="results-header">
+                    <h3><i class="fas fa-chart-line"></i> Resultados</h3>
+                    <button id="clearResultsBtn" class="btn btn-sm">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="results-content">
+                    <div id="algorithmResults" class="results-section hidden">
+                        <h4>Resultado del Algoritmo</h4>
+                        <div id="algorithmOutput"></div>
+                    </div>
+
+                    <div id="pathResults" class="results-section hidden">
+                        <h4>Ruta Encontrada</h4>
+                        <div id="pathOutput"></div>
+                    </div>
+
+                    <div id="mstResults" class="results-section hidden">
+                        <h4>Árbol de Expansión Mínima</h4>
+                        <div id="mstOutput"></div>
+                        <div id="mstComparison" class="comparison-section hidden">
+                            <h5>Comparación Kruskal vs Prim</h5>
+                            <div id="comparisonOutput"></div>
+                        </div>
+                    </div>
+
+                    <div id="statisticsResults" class="results-section">
+                        <h4>Estadísticas del Grafo</h4>
+                        <div id="statsOutput">
+                            <div class="stat-item">
+                                <span class="stat-label">Nodos:</span>
+                                <span id="nodeCount">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Aristas:</span>
+                                <span id="edgeCount">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Densidad:</span>
+                                <span id="graphDensity">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="nodeModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Propiedades del Nodo</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <label for="nodeId">ID del Nodo:</label>
+                <input type="text" id="nodeId" placeholder="Ej: A, 1, Node1">
+                <label for="nodeLabel">Etiqueta:</label>
+                <input type="text" id="nodeLabel" placeholder="Etiqueta opcional">
+            </div>
+            <div class="modal-footer">
+                <button id="saveNodeBtn" class="btn btn-primary">Guardar</button>
+                <button id="cancelNodeBtn" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="edgeModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Propiedades de la Arista</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="edgeWeightContainer">
+                    <label for="edgeWeight">Peso de la Arista (entero):</label>
+                    <input type="number" id="edgeWeight" value="1" min="1" step="1" pattern="[0-9]+" title="Ingrese un número entero positivo">
+                </div>
+                <label for="edgeLabel">Etiqueta:</label>
+                <input type="text" id="edgeLabel" placeholder="Etiqueta opcional">
+            </div>
+            <div class="modal-footer">
+                <button id="saveEdgeBtn" class="btn btn-primary">Guardar</button>
+                <button id="cancelEdgeBtn" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="historyModal" class="modal hidden">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Historial de Grafos</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="historyContent" class="history-grid"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="clearHistoryBtn" class="btn btn-danger">Limpiar Historial</button>
+                <button id="closeHistoryBtn" class="btn btn-secondary">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner hidden">
+        <div class="spinner"></div>
+        <p>Procesando algoritmo...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="js/graph.js"></script>
+    <script src="js/algorithms.js"></script>
+    <script src="js/visualization.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/history.js"></script>
+    <script src="js/main.js"></script>
+    
+    <!-- Auto-completion handlers -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-completar etiqueta de arista cuando cambie el peso
+            const edgeWeightInput = document.getElementById('edgeWeight');
+            const edgeLabelInput = document.getElementById('edgeLabel');
+            
+            if (edgeWeightInput && edgeLabelInput) {
+                edgeWeightInput.addEventListener('input', function() {
+                    const weight = parseInt(this.value);
+                    if (!isNaN(weight) && weight > 0 && !edgeLabelInput.value.trim()) {
+                        edgeLabelInput.value = weight.toString();
+                    }
+                });
+                
+                // Validar que solo se ingresen enteros
+                edgeWeightInput.addEventListener('keypress', function(e) {
+                    // Permitir solo dígitos, backspace, delete, tab, escape, enter
+                    if ([46, 8, 9, 27, 13].indexOf(e.keyCode) !== -1 ||
+                        // Permitir Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                        (e.keyCode === 65 && e.ctrlKey === true) ||
+                        (e.keyCode === 67 && e.ctrlKey === true) ||
+                        (e.keyCode === 86 && e.ctrlKey === true) ||
+                        (e.keyCode === 88 && e.ctrlKey === true)) {
+                        return;
+                    }
+                    // Asegurar que es un dígito
+                    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                        e.preventDefault();
+                    }
+                });
+            }
+            
+            // Auto-completar etiqueta de nodo cuando cambie el ID
+            const nodeIdInput = document.getElementById('nodeId');
+            const nodeLabelInput = document.getElementById('nodeLabel');
+            
+            if (nodeIdInput && nodeLabelInput) {
+                nodeIdInput.addEventListener('input', function() {
+                    const nodeId = this.value.trim();
+                    if (nodeId && !nodeLabelInput.value.trim()) {
+                        nodeLabelInput.value = nodeId;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
